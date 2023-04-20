@@ -85,12 +85,12 @@ class Window(QMainWindow):
         # Main menu bar
         self.menu = self.menuBar()
         self.menu_file = self.menu.addMenu("File")
-        exit = QAction("Exit", self, triggered=qApp.quit)
+        exit = QAction("Exit", self, triggered=QApplication.quit)
         self.menu_file.addAction(exit)
 
         self.menu_about = self.menu.addMenu("&About")
         about = QAction("About Qt", self, shortcut=QKeySequence(QKeySequence.HelpContents),
-                        triggered=qApp.aboutQt)
+                        triggered=QApplication.aboutQt)
         self.menu_about.addAction(about)
 
         # Create a label for the display camera
