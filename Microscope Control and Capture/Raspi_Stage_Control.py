@@ -1,58 +1,80 @@
+ import sys
 import RPi.GPIO as GPIO
-from RpiMotorLib import RpiMotorLib
 import time
+import encodings
+import PyQt5
+from PyQt5 import QtCore, QtGui, QtWidgets
+from gui_v2 import Ui_MainWindow
+from PyQt5.QtCore import QTimer
 
-def set_pinouts():
-    #Define GPIO pins
-    GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
-    #Set GPIO pins for X Y Motors
-    pinx = [2,3,14,15]
-    piny = [17,27,18,23]
 
-    #x
-    for pin in pinx:
-        GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, 0)
-    #Y
-    for pin in piny:
-        GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, 0)
+#STEP(PUL) PINS
+# stepper A
+GPIO.setup(17,GPIO.OUT)
+GPIO.output(17, False)
+# stepper B
+GPIO.setup(5,GPIO.OUT)
+GPIO.output(5, False)
 
-    return pinx, piny
+#DIR PINS
+# stepper A
+GPIO.setup(18,GPIO.OUT)
+GPIO.output(18, False)
+# stepper B
+GPIO.setup(6,GPIO.OUT)
+GPIO.output(6, False)
 
-def set_step_size():
-    #Define step size
-    halfstep_seq = [
-      [1,0,0,0],
-      [1,1,0,0],
-      [0,1,0,0],
-      [0,1,1,0],
-      [0,0,1,0],
-      [0,0,1,1],
-      [0,0,0,1],
-      [1,0,0,1]
-    ]
-    #Define number of steps to cross field of view
-    numStepsx = 2
-    numStepsy = 4
+#ENABLE PINS
+# stepper A
+GPIO.setup(27,GPIO.OUT)
+GPIO.output(27, True)
+# stepper B
+GPIO.setup(19,GPIO.OUT)
+GPIO.output(19, True)
 
-    return numStepsx, numStepsy, halfstep_seq
+x_delay = 0.002  
 
-def translate_axis(axis): 
-    pinx, piny = set_pinouts()
-    numStepsx, numStepsy, halfstep_seq = set_step_size()
-    #Translate stage through grid pattern
-    if axis == 0:
-        for i in range(numStepsx*512):
-            for halfstep in range(8):
-                for pin in range(4):
-                    GPIO.output(pinx[pin],halfstep_seq[halfstep][pin])
-                time.sleep(0.001)
-    if axis == 1:
-        for j in range(numStepsy*512):
-            for halfstep in range(8):
-                for pin in range(4):
-                    GPIO.output(piny[pin],halfstep_seq[halfstep][pin])
-                time.sleep(0.001)
-            
+    
+class gui(Ui_MainWindow):
+    def __init__(self, dialog):
+        Ui_MainWindow.__init__(self)
+        self.setupUi(dialog)
+        self.button_B.clicked.connect(self.moveB)
+        self.button_A.clicked.connect(self.moveA)
+        self.timer= QTimer()
+
+    
+    def moveB(self): #as long as button B is kept pressed, this motor should keep running
+        GPIO.output(19, True) #EN
+        GPIO.output(6, True)  #DIR
+        GPIO.output(5, False)
+        time.sleep(0.00001)
+        GPIO.output(5, True)
+          
+    def moveA(self): #by one press of button A, this motor runs continuously
+
+        GPIO.output(27, True) #EN
+        GPIO.output(18, False) #DIR
+        def f():
+            GPIO.output(17, False)
+            time.sleep(0.002)
+            GPIO.output(17, True)
+        self.timer.timeout.connect(f)
+        self.timer.start(2) #2msec
+
+
+#    def stop(self):
+#        GPIO.output(27, False)
+#        self.timer.stop()
+
+               
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    dialog = QtWidgets.QMainWindow()
+    program = gui(dialog)
+    dialog.show()
+    sys.exit(app.exec_())
+     
