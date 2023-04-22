@@ -11,13 +11,15 @@ def set_pinouts():
     piny = [1,7,8,25]
 
     #x
-    for pinx in control_pins:
-        GPIO.setup(pinx, GPIO.OUT)
-        GPIO.output(pinx, 0)
+    for pin in pinx:
+        GPIO.setup(pin, GPIO.OUT)
+        GPIO.output(pin, 0)
     #Y
-    for piny in control_pins:
-        GPIO.setup(piny, GPIO.OUT)
-        GPIO.output(piny, 0)
+    for pin in piny:
+        GPIO.setup(pin, GPIO.OUT)
+        GPIO.output(pin, 0)
+
+    return pinx, piny
 
 def set_step_size():
     #Define step size
@@ -35,20 +37,22 @@ def set_step_size():
     numStepsx = 62
     numStepsy = 64
 
+    return numStepsx, numStepsy, halfstep_seq
+
 def translate_axis(axis): 
-    set_pinouts()
-    set_step_size()
+    pinx, piny = set_pinouts()
+    numStepsx, numStepsy, halfstep_seq = set_step_size()
     #Translate stage through grid pattern
     if axis == 0:
         for i in range(numStepsx*512):
             for halfstep in range(8):
                 for pin in range(4):
-                    GPIIO.output(pinx[pin],halfstep_seq[halfstep][pin])
+                    GPIO.output(pinx[pin],halfstep_seq[halfstep][pin])
                 time.sleep(0.001)
     if axis == 1:
         for j in range(numStepsy*512):
             for halfstep in range(8):
                 for pin in range(4):
-                    GPIIO.output(pinx[pin],halfstep_seq[halfstep][pin])
+                    GPIO.output(piny[pin],halfstep_seq[halfstep][pin])
                 time.sleep(0.001)
             
