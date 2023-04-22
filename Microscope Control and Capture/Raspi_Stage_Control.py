@@ -1,11 +1,13 @@
 import RPi.GPIO as GPIO
-from RpiMotorLib import RpiMotorLib
 import time
 
-def set_pinouts():
-    #Define GPIO pins
-    GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)
+control_pins = [26,19,13,6]
+for pin in control_pins:
+  GPIO.setup(pin, GPIO.OUT)
+  GPIO.output(pin, 0)
 
+<<<<<<< HEAD
     #Set GPIO pins for X Y Motors
     pinx = [26,19,13,6]
     piny = [1,7,8,25]
@@ -56,3 +58,22 @@ def translate_axis(axis):
                     GPIO.output(piny[pin],halfstep_seq[halfstep][pin])
                 time.sleep(0.001)
             
+=======
+
+halfstep_seq = [
+  [1,0,0,0],
+  [1,1,0,0],
+  [0,1,0,0],
+  [0,1,1,0],
+  [0,0,1,0],
+  [0,0,1,1],
+  [0,0,0,1],
+  [1,0,0,1]
+]
+for i in range(512):
+  for halfstep in range(8):
+    for pin in range(4):
+      GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
+    time.sleep(0.001)
+GPIO.cleanup()
+>>>>>>> ef82ca12da180dc67d087cea3229be1655ce0a2f
