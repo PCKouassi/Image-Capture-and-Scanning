@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from RpiMotorlib import RpiMotorlib
+from RpiMotorLib import RpiMotorLib
 import time
 
 def set_pinouts():
@@ -7,8 +7,8 @@ def set_pinouts():
     GPIO.setmode(GPIO.BOARD)
 
     #Set GPIO pins for X Y Motors
-    pinx = [2,3,14,15]
-    piny = [17,27,18,23]
+    pinx = [26,19,13,6]
+    piny = [1,7,8,25]
 
     #x
     for pinx in control_pins:
@@ -32,8 +32,8 @@ def set_step_size():
       [1,0,0,1]
     ]
     #Define number of steps to cross field of view
-    numStepsx = 2
-    numStepsy = 4
+    numStepsx = 62
+    numStepsy = 64
 
 def translate_axis(axis): 
     set_pinouts()
