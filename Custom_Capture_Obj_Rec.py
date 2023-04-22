@@ -1,6 +1,3 @@
-# Copyright (C) 2022 The Qt Company Ltd.
-# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-
 import os
 import sys
 import time
@@ -11,10 +8,6 @@ from PySide6.QtGui import QAction, QImage, QKeySequence, QPixmap
 from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox,
                                QHBoxLayout, QLabel, QMainWindow, QPushButton,
                                QSizePolicy, QVBoxLayout, QWidget)
-
-
-"""This example uses the video from a  webcam to apply pattern
-detection from the OpenCV module. e.g.: face, eyes, body, etc."""
 
 
 class Thread(QThread):
@@ -79,7 +72,7 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
         # Title and dimensions
-        self.setWindowTitle("Patterns detection")
+        self.setWindowTitle("POCAS Mobile Microscope")
         self.setGeometry(0, 0, 800, 480)
 
         # Main menu bar
