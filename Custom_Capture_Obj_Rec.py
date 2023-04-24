@@ -1,6 +1,8 @@
 import os
 import sys
 import time
+#import stepper_move
+
 
 import cv2
 from PySide6.QtCore import Qt, QThread, Signal, Slot
@@ -121,6 +123,26 @@ class Window(QMainWindow):
         buttons_layout.addWidget(self.button2)
         buttons_layout.addWidget(self.button1)
 
+        self.button4 = QPushButton("Right")
+        self.button5 = QPushButton("Left")
+        self.button6 = QPushButton("Up")
+        self.button7 = QPushButton("Down")
+        self.button8 = QPushButton("+ Z")
+        self.button9 = QPushButton("- Z")
+        self.button4.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.button5.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.button6.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.button7.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.button8.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.button9.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        buttons_layout.addWidget(self.button4)
+        buttons_layout.addWidget(self.button5)
+        buttons_layout.addWidget(self.button6)
+        buttons_layout.addWidget(self.button7)
+        buttons_layout.addWidget(self.button8)
+        buttons_layout.addWidget(self.button9)
+
+
         right_layout = QHBoxLayout()
         right_layout.addWidget(self.group_model, 1)
         right_layout.addLayout(buttons_layout, 1)
@@ -139,8 +161,20 @@ class Window(QMainWindow):
         self.button1.clicked.connect(self.start)
         self.button2.clicked.connect(self.kill_thread)
         self.button3.clicked.connect(self.capture_button)
+        self.button4.clicked.connect(self.stepper_right)
+        self.button5.clicked.connect(self.stepper_left)
+        self.button6.clicked.connect(self.stepper_up)
+        self.button7.clicked.connect(self.stepper_down)
+        self.button8.clicked.connect(self.stepper_zplus)
+        self.button9.clicked.connect(self.stepper_zminus)
         self.button2.setEnabled(False)
         self.button3.setEnabled(False)
+        self.button4.setEnabled(False)
+        self.button5.setEnabled(False)
+        self.button6.setEnabled(False)
+        self.button7.setEnabled(False)
+        self.button8.setEnabled(False)
+        self.button9.setEnabled(False)
         self.combobox.currentTextChanged.connect(self.set_model)
 
     @Slot()
@@ -165,6 +199,12 @@ class Window(QMainWindow):
         print("Starting...")
         self.button3.setEnabled(True)
         self.button2.setEnabled(True)
+        self.button4.setEnabled(True)
+        self.button5.setEnabled(True)
+        self.button6.setEnabled(True)
+        self.button7.setEnabled(True)
+        self.button8.setEnabled(True)
+        self.button9.setEnabled(True)
         self.button1.setEnabled(False)
         self.th.set_file(self.combobox.currentText())
         self.th.start()
@@ -176,6 +216,33 @@ class Window(QMainWindow):
     @Slot()
     def capture_button(self):
         self.th.capture()
+
+    
+    @Slot()
+    def stepper_left(self):
+        stepper_move.move_a_motor(1)
+        
+    @Slot()
+    def stepper_right(self):
+        stepper_move.move_a_motor(-1)
+
+    @Slot()
+    def stepper_up(self):
+        stepper_move.move_a_motor(2)
+    
+    @Slot()
+    def stepper_down(self):
+        stepper_move.move_a_motor(-2)
+    
+
+    @Slot()
+    def stepper_zplus(self):
+        stepper_move.move_a_motor(3)
+
+    @Slot()
+    def stepper_zminus(self):
+        stepper_move.move_a_motor(-3)
+    
 
 
 if __name__ == "__main__":
