@@ -47,6 +47,7 @@ def move_a_motor(motor):
        for halfstep in range(8):
           for pin in range(4):
              GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
+             
     on_off = False
 
 time.sleep(0.001)
